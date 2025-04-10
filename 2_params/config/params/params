@@ -1,0 +1,12 @@
+[PARAMS]
+count   = 6
+param1  = params-1
+param2  = params-2
+
+[BASEOFFSET]
+offset  = {"x": 23.012, "y": 2.0, "z": -20.0, "roll": 90.12302, "pitch": 0.0, "yaw": 200.0}
+
+[DETAIL]
+type                    = revolute
+lower_angle_limit       = -360
+upper_angle_limit       = 360.0

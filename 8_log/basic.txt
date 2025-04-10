@@ -1,0 +1,2 @@
+[spdlog] [2025-03-31 21:09:26.269] [info] [11168] [ :]  Welcome to info spdlog!
+[spdlog] [2025-03-31 21:09:26.269] [info] [11168] [spdlog_file.cpp main:27]  Welcome to info spdlog

@@ -1,0 +1,7 @@
+参数的获取和使用
+编译命令：
+g++ -std=c++17 -o params_example src/params.cpp
+
+g++ -std=c++17 -I include -o params_ini_example src/params_ini.cpp
+
+g++ -std=c++17 -I include -o params_json_example src/params_json.cpp
