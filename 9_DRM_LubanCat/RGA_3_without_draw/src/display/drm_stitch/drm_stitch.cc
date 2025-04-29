@@ -377,7 +377,8 @@ void VideoWall::add_frames(size_t screen_place, cv::Mat &frame)
 
 release_buffer:
     // 释放临时资源
-    releasebuffer_handle(src_handle_);
+    if (src_handle_)
+        releasebuffer_handle(src_handle_);
     // dma_buf_free(src_buf_size, &src_dma_fd, src_buf);
 
     return;
