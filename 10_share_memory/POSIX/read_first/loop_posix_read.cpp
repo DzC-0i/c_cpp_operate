@@ -90,28 +90,16 @@ public:
     std::string read_data()
     {
         // 等待数据可用
-        while (true)
+        if ((sem_wait(write_sem) == -1) || should_exit.load())
         {
-            if (sem_wait(write_sem) == -1)
+            // 如果是因为信号中断，检查 should_exit
+            if (should_exit.load())
             {
-                if (errno == EINTR)
-                {
-                    if (should_exit.load())
-                    {
-                        return "";
-                    }
-                    continue;
-                }
-                else
-                {
-                    std::cerr << "sem_wait failed: " << strerror(errno) << std::endl;
-                    return "";
-                }
+                std::cerr << "Exiting read_data due to Ctrl+C" << std::endl;
+                return "";
             }
-            else
-            {
-                break;
-            }
+            std::cerr << "sem_wait failed: " << strerror(errno) << std::endl;
+            return "";
         }
 
         // 读取数据
@@ -154,7 +142,17 @@ private:
 int main()
 {
     // 注册信号处理：响应Ctrl+C（SIGINT）
-    signal(SIGINT, signal_handler);
+    // signal(SIGINT, signal_handler);  // 这个不是很好用
+
+    struct sigaction sa;
+    sa.sa_handler = signal_handler;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0; // 不自动重启被中断的系统调用
+    if (sigaction(SIGINT, &sa, NULL) == -1)
+    {
+        std::cerr << "Failed to set signal handler: " << strerror(errno) << std::endl;
+        return 1;
+    }
 
     SyncSharedMemoryReader reader;
 
@@ -170,7 +168,7 @@ int main()
         {
             std::cout << "Reader: Received data: " << received << std::endl;
         }
-        else if (should_exit.load())
+        else
         {
             break; // Exit if received empty data due to signal
         }
@@ -178,3 +176,4 @@ int main()
 
     return 0;
 }
+
