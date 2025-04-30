@@ -10,6 +10,8 @@ g++ receiver.cpp -o receiver
 ```bash
 # 查看共享情况
 ipcs -m
+# 删除指定标识符的共享内存段
+ipcrm -m <shmid>
 ```
 
 POSIX共享内存是另一种更现代的共享内存实现方式。
